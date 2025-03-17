@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Maksim</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<div class="window" id="personal-info-window" style="top: 5%; left: 3%;">
+		<div class="title-bar">
+			Personal Info
+			<div class="close-btn">x</div>
+		</div>
+		<div class="content">
+			<img src="img/Ya.png" alt="My Photo" id="myPhoto">
+			<div class="text" id="personalTextInfo">
+				<p><strong>First Name:</strong> Maksim</p>
+				<p><strong>Second Name:</strong> Belyakov</p>
+				<p><strong>Middle Name:</strong> Denisovich</p>
+				<p><strong>Date of Birth:</strong> 28.03.2001</p>
+				<p><strong>Phone Number:</strong> +7 (999) 523-86-55</p>
+				<p><strong>Email:</strong> rasomaxon@mail.ru</p>
+				<p><strong>Country:</strong> Russia</p>
+				<p><strong>City:</strong> Orekhovo-Zuevo</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="folder">
+		<a href="projects.html">
+			<img src="img/fold.png" alt="Folder Icon">
+		</a>
+		<p>Projects</p>
+	</div>
+
+	<div class="window email-window" id="email-window" style="top: 55%; left: 3%;">
+		<div class="title-bar">
+			Send me E-Mail
+			<div class="close-btn">x</div>
+		</div>
+		<div class="content">
+			<label for="email">Your e-mail:</label>
+			<input type="text" id="email" placeholder="Your e-mail">
+
+			<label for="name">Your name:</label>
+			<input type="text" id="name" placeholder="Your name">
+
+			<label for="message">Message content:</label>
+			<textarea id="message" rows="4" placeholder="Message content"></textarea>
+
+			<label>
+				<input type="checkbox"> Yes, I am a spammer
+			</label>
+
+			<button>Send</button>
+		</div>
+	</div>
+
+	<div id="app" style="height: 100vh">
+	</div>
+	<script src="https://unpkg.com/webamp@1.4.2/built/webamp.bundle.min.js"></script>
+	<script>
+		const Webamp = window.Webamp;
+		const webamp = new Webamp({
+			initialTracks: [
+				{
+					metaData: {
+						artist: "Princess_Chelsea",
+						title: "Cigarette_Duet",
+					},
+					url: "audio/Princess_Chelsea_-_Cigarette_Duet_64373877.mp3",
+					duration: 5.322286,
+				},
+				{
+					metaData: {
+						artist: "Второй Ка",
+						title: "Тени от пальм",
+					},
+					url: "audio/Vtorojj_Ka_-_Teni_ot_palm_77764605.mp3",
+					duration: 5.322286,
+				},
+			],
+		});
+
+		webamp.renderWhenReady(document.getElementById("app"));
+	</script>
+
+	
+	<div class="taskbar">
+		<div class="start-btn">Start</div>
+		<div class="taskbar-buttons" id="taskbar-buttons"></div>
+		<div class="clock" id="clock">23:12</div>
+	</div>
+	<script>
+		document.querySelectorAll('.folder').forEach(folder => {
+				folder.addEventListener('click', function (e) {
+					document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
+					folder.classList.add('selected');
+
+					e.stopPropagation();
+				});
+			});
+			document.addEventListener('click', function (e) {
+				if (!e.target.classList.contains('folder')) {
+					document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
+				}
+			});
+			document.querySelectorAll('.window').forEach(window => {
+				window.addEventListener('click', function () {
+					document.querySelectorAll('.window').forEach(w => w.style.zIndex = 1);
+					window.style.zIndex = 1000;
+				});
+			});
+
+			function makeDraggable(window) {
+				const titleBar = window.querySelector('.title-bar');
+
+				let isDragging = false;
+				let offsetX = 0;
+				let offsetY = 0;
+
+				titleBar.addEventListener('mousedown', (e) => {
+					isDragging = true;
+					offsetX = e.clientX - window.offsetLeft;
+					offsetY = e.clientY - window.offsetTop;
+					document.querySelectorAll('.window').forEach(w => w.style.zIndex = 1);
+					window.style.zIndex = 1000;
+				});
+
+				document.addEventListener('mousemove', (e) => {
+					if (isDragging) {
+						window.style.left = `${e.clientX - offsetX}px`;
+						window.style.top = `${e.clientY - offsetY}px`;
+					}
+				});
+
+				document.addEventListener('mouseup', () => {
+					isDragging = false;
+				});
+			}
+
+			document.querySelectorAll('.window').forEach(makeDraggable);
+
+			document.querySelectorAll('.close-btn').forEach(btn => {
+				btn.addEventListener('click', () => {
+					const window = btn.closest('.window');
+					const taskbarButton = document.querySelector(`[data-window="${window.id}"]`);
+					window.classList.add('hidden');
+					if (taskbarButton) taskbarButton.remove();
+				});
+			});
+
+			function createTaskbarButton(window) {
+				const taskbarButtons = document.getElementById('taskbar-buttons');
+				const button = document.createElement('div');
+				button.classList.add('taskbar-button');
+				button.dataset.window = window.id;
+
+				const title = window.querySelector('.title-bar').childNodes[0].textContent.trim();
+				button.innerHTML = title;
+
+				const closeButton = document.createElement('div');
+				closeButton.classList.add('close-btn');
+				closeButton.innerHTML = 'x';  
+				closeButton.addEventListener('click', (e) => {
+					e.stopPropagation();
+					window.classList.add('hidden');
+					button.remove();
+				});
+
+				button.appendChild(closeButton);
+
+				button.addEventListener('click', () => {
+					document.querySelectorAll('.window').forEach(w => w.style.zIndex = 1);
+					window.style.zIndex = 1000;
+					window.classList.remove('hidden');
+				});
+
+				taskbarButtons.appendChild(button);
+			}
+
+			document.querySelectorAll('.window').forEach(window => {
+				createTaskbarButton(window);
+			});
+
+			document.querySelector('.start-btn').addEventListener('click', () => {
+				document.querySelectorAll('.window.hidden').forEach(window => {
+					window.classList.remove('hidden');
+					if (!document.querySelector(`[data-window="${window.id}"]`)) {
+						createTaskbarButton(window);
+					}
+				});
+			});
+
+			function updateClock() {
+				const clock = document.getElementById('clock');
+				const now = new Date();
+				clock.textContent = now.toLocaleTimeString();
+			}
+
+			setInterval(updateClock, 1000);
+			updateClock();
+	</script>
+</body>
+
+</html>

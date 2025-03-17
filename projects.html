@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Maksim</title>
+	<link rel="stylesheet" href="projects_style.css">
+</head>
+
+<body>
+	
+	<div class="window" style="top: 5%; left: 3%;">
+		<div class="title-bar">
+			My projects
+			<div class="close-btn">x</div>
+		</div>
+		<ul>
+			<li><a href="https://github.com/rasomaxon/Crabs">Article about crabs</a></li>
+			<li><a href="https://github.com/rasomaxon/LOADIIIIING-GAME-PC-ANDROID">Casual Game PC/ANDROID</a></li>
+			<li><a href="https://github.com/rasomaxon/valentine">Valentine for your girl</a></li>
+			<li><a href="https://github.com/rasomaxon/TravisScottWebSite">TravisScott</a></li>
+		</ul>
+	</div>
+
+	<div class="taskbar">
+		<div class="start-btn">Start</div>
+		<div class="taskbar-buttons" id="taskbar-buttons"></div>
+		<div class="clock" id="clock">23:12</div>
+	</div>
+
+	<div class="folder">
+		<a href="index.html">
+			<img src="img/home.png" alt="Go back">
+		</a>
+		<p>Home</p>
+	</div>
+
+	<script>
+		document.querySelectorAll('.folder').forEach(folder => {
+			folder.addEventListener('click', function (e) {
+				document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
+				folder.classList.add('selected');
+
+				e.stopPropagation();
+			});
+		});
+		document.addEventListener('click', function (e) {
+			if (!e.target.classList.contains('folder')) {
+				document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
+			}
+		});
+		document.querySelectorAll('.window').forEach(window => {
+			window.addEventListener('click', function () {
+				document.querySelectorAll('.window').forEach(w => w.style.zIndex = 1);
+				window.style.zIndex = 1000;
+			});
+		});
+
+		function makeDraggable(window) {
+			const titleBar = window.querySelector('.title-bar');
+
+			let isDragging = false;
+			let offsetX = 0;
+			let offsetY = 0;
+
+			titleBar.addEventListener('mousedown', (e) => {
+				isDragging = true;
+				offsetX = e.clientX - window.offsetLeft;
+				offsetY = e.clientY - window.offsetTop;
+				document.querySelectorAll('.window').forEach(w => w.style.zIndex = 1);
+				window.style.zIndex = 1000;
+			});
+
+			document.addEventListener('mousemove', (e) => {
+				if (isDragging) {
+					window.style.left = `${e.clientX - offsetX}px`;
+					window.style.top = `${e.clientY - offsetY}px`;
+				}
+			});
+
+			document.addEventListener('mouseup', () => {
+				isDragging = false;
+			});
+		}
+
+		document.querySelectorAll('.window').forEach(makeDraggable);
+
+		document.querySelectorAll('.close-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				const window = btn.closest('.window');
+				const taskbarButton = document.querySelector(`[data-window="${window.id}"]`);
+				window.classList.add('hidden');
+				if (taskbarButton) taskbarButton.remove();
+			});
+		});
+
+		function createTaskbarButton(window) {
+			const taskbarButtons = document.getElementById('taskbar-buttons');
+			const button = document.createElement('div');
+			button.classList.add('taskbar-button');
+			button.dataset.window = window.id;
+
+			const title = window.querySelector('.title-bar').childNodes[0].textContent.trim();
+			button.innerHTML = title;
+
+			const closeButton = document.createElement('div');
+			closeButton.classList.add('close-btn');
+			closeButton.innerHTML = 'x';
+			closeButton.addEventListener('click', (e) => {
+				e.stopPropagation();
+				window.classList.add('hidden');
+				button.remove();
+			});
+
+			button.appendChild(closeButton);
+
+			button.addEventListener('click', () => {
+				document.querySelectorAll('.window').forEach(w => w.style.zIndex = 1);
+				window.style.zIndex = 1000;
+				window.classList.remove('hidden');
+			});
+
+			taskbarButtons.appendChild(button);
+		}
+
+		document.querySelectorAll('.window').forEach(window => {
+			createTaskbarButton(window);
+		});
+
+		document.querySelector('.start-btn').addEventListener('click', () => {
+			document.querySelectorAll('.window.hidden').forEach(window => {
+				window.classList.remove('hidden');
+				if (!document.querySelector(`[data-window="${window.id}"]`)) {
+					createTaskbarButton(window);
+				}
+			});
+		});
+
+		function updateClock() {
+			const clock = document.getElementById('clock');
+			const now = new Date();
+			clock.textContent = now.toLocaleTimeString();
+		}
+
+		setInterval(updateClock, 1000);
+		updateClock();
+	</script>
+</body>
+
+</html>

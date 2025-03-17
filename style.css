@@ -1,0 +1,194 @@
+@font-face {
+	font-family: 'Monocraft';
+	src: url('Monocraft.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+* {
+	font-family: 'Monocraft';
+}
+a {
+	text-decoration: none;
+}
+ul {
+	list-style-type: none;
+}
+body {
+	margin: 0;
+	font-family: 'Monocraft', sans-serif;
+	font-size: calc(8px + 17 * (100vh - 320px) / 880);
+	background-color: #008080;
+}
+
+.window {
+	position: absolute;
+	background-color: #c0c0c0;
+	border: 2px solid #000080;
+	box-shadow: 4px 4px 0 #000;
+	overflow: auto;
+	z-index: 1;
+}
+
+.content {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	padding: 10px;
+}
+
+.title-bar {
+	display: flex;
+	align-items: center;
+	background-color: #000080;
+	color: #fff;
+	padding: 5px;
+	margin: 2px 2px 0 2px;
+	cursor: move;
+	user-select: none;
+}
+
+.title-bar .close-btn {
+	margin-left: auto;
+	width: 16px;
+	height: 16px;
+	background-color: #ff0000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	color: #fff;
+	cursor: pointer;
+}
+
+.folder {
+	position: absolute;
+	top: 1%;
+	right: 1%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	color: #000;
+	font-size: 2vh;
+	cursor: pointer;
+	border: 2px dashed transparent;
+	padding: 15px;
+	z-index: 0;
+}
+
+.folder:hover {
+	border: 2px dashed #ffffff;
+}
+.folder p{
+	margin-bottom: 0;
+}
+.folder img {
+	width: 80px;
+}
+
+.taskbar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	background-color: #c0c0c0;
+	display: flex;
+	align-items: center;
+	border-top: 2px solid #808080;
+	box-shadow: 0 -2px 0 #000;
+	z-index: 9999;
+}
+
+.start-btn {
+	background-color: #008000;
+	color: #fff;
+	padding: 5px 10px;
+	border: 2px solid #000;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.taskbar-buttons {
+	display: flex;
+	gap: 5px;
+	margin-left: 10px;
+}
+
+.taskbar-button {
+	background-color: #c0c0c0;
+	border: 2px solid #000;
+	padding: 5px 10px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.taskbar-button .close-btn {
+	width: 16px;
+	height: 16px;
+	background-color: #ff0000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	color: #fff;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.taskbar-button.active {
+	background-color: #808080;
+}
+
+.clock {
+	margin-left: auto;
+	margin-right: 10px;
+	font-size: 14px;
+}
+
+.email-window .content {
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+}
+
+.email-window label {
+	margin-bottom: 5px;
+}
+
+.email-window input[type="text"],
+.email-window textarea {
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 5px;
+	border: 1px solid #000;
+	box-sizing: border-box;
+}
+
+.email-window input[type="checkbox"] {
+	margin-right: 5px;
+}
+
+.email-window button {
+	padding: 5px 10px;
+	border: 1px solid #000;
+	background-color: #008000;
+	color: #fff;
+	cursor: pointer;
+}
+
+.hidden {
+	display: none;
+}
+
+#myPhoto {
+	object-fit: cover;
+	margin-right: 10px;
+	min-width: 200px;
+	border: 5px inset;
+}
+
+#personalTextInfo {
+	min-width: 405px;
+}
